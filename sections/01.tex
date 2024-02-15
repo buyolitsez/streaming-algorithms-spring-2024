@@ -1,0 +1,78 @@
+%09.02.2024, лекция 1
+
+\section{Lec 1}
+
+\begin{df}[Stream]
+	Stream is a sequence of numbers $a_1, \ldots a_N$, where  $a_i \in [M]$. 
+
+	Usually we want to have at least $\log N$ memory, to be able to save the number of current symbol.
+\end{df}
+
+\begin{df}[Frequency moments]
+	Let $f_1, \ldots, f_M$ be a frequency of each symbol in the stream.
+
+	Usually our memory is not enough to store all the frequencies, so we want to calculate some function of them.
+\end{df}
+
+\begin{problem}
+	Is there an $i \colon f_i > \frac{N}{2}$? Output it if it exists.
+\end{problem}
+
+\begin{proof}
+	Using $O(\log N + \log M)$ memory we can store the number of occupancies of current symbol and that symbol itself. When we see that symbol we increase counter, when we see another we decrease it. When counter is 0 we swap current symbol.
+
+	Store pair $(x, c)$, if $c = 0$, then $x$ is assigned $a_i$. 
+
+	If $a_i = x$, then increment c.
+
+	If  $a_i \neq x$, then decrement c.
+
+	TODO
+\end{proof}
+
+\begin{problem}[Heavy Hitters]
+	Given $\eps, \alpha$ be any real numbers such that $\eps \in [0, 1]$ and  $0 \leq \alpha < \eps$.
+
+	Output: $T \subseteq [M]$ such that  $\forall i \in T \implies f_i \geq (\eps - \alpha) N$.
+	And  $\forall i \colon f_i \geq \eps N \implies i \in T$.
+\end{problem}
+
+\begin{proof}
+	Let $T \subseteq [M]$,  and let $c_x$ is a counter for  $x$. 
+	We take $t$ that will be chosen later.
+
+	If $a_j \in T$, then  $c_{a_j}$ is incremented.
+
+	If $a_j \not \in T$ and  $|T| < t$, then put $a_j$ to  $T$.
+
+	If  $a_j \not \in T$ and  $|T| = t$, then decrement all counters by 1.
+
+ 	And all  $i \colon c_i = 0$, then drop those indices from  $T$. 
+
+	If we put $t = \frac{1}{\eps}$, then second condition on $T$ would be satisfied, but we not sure what to do with the first one.
+	
+	In order to satisfy the first condition, we put $t = \frac{1}{\alpha} - 1$.
+
+	Let $f_i \geq \eps N$, then at the end  $c_i$ would be at least  $(\eps - \alpha) N$, because we decrease this counter at most  $\frac{N}{t}$ times. 
+
+	At the end
+
+	\begin{align*}
+		N = (t+ 1) d + \sum_{i \in [M]} c_i
+	\end{align*}, where $d$ is a number of deletions.
+	Implies that  $d \leq \frac{N}{t + 1} = \alpha N$ .
+
+	Hence
+
+	\begin{align*}
+		f_i \leq c_i + d \implies f_i \leq c_i + \alpha N \implies f_i - c_i \geq \alpha N \geq (\eps - \alpha N)
+	\end{align*}
+
+	So we just filter $T$ and leave only numbers with  $c_i \geq (\eps - \alpha) N$.
+
+	Total space complexity is $O(t (\log N + \log M)) = O\left( \frac{\log N + \log M}{\alpha}\right)$.
+\end{proof}
+
+\begin{proof}[Другое решение этой же задачи]
+	TODO
+\end{proof}

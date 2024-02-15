@@ -1,0 +1,132 @@
+\documentclass[a4paper,14pt]{extarticle}
+\usepackage[margin=0.5in]{geometry}
+\usepackage[T1,T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{gensymb}
+\usepackage{systeme,mathtools}
+\usepackage{indentfirst}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{breqn}
+\usepackage{verbatim}
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily,
+  mathescape
+}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{pgfplots}
+\usepackage{transparent}
+\usepackage{import}
+\usepackage{xifthen}
+\usepackage{pdfpages}
+\pgfplotsset{compat=1.16}
+
+\newcommand{\incfig}[2][1]{%
+ \def\svgwidth{#1\columnwidth}
+ \import{./figures/}{#2.pdf_tex}
+}
+
+\pdfsuppresswarningpagegroup=1
+
+% counters and theorems
+\newcounter{theoremCnt}
+\counterwithin{theoremCnt}{section}
+\counterwithin{equation}{section}
+
+% numbered theorems
+\theoremstyle{definition}
+\newtheorem{df}[theoremCnt]{Definition}
+\theoremstyle{plain}
+\newtheorem{thm}[theoremCnt]{Theorem}
+\theoremstyle{plain}
+\newtheorem{lm}[theoremCnt]{Lemma}
+\theoremstyle{plain}
+\newtheorem{crly}[theoremCnt]{Следствие}
+\theoremstyle{plain}
+\newtheorem{prop}[theoremCnt]{Предложение}
+\theoremstyle{definition}
+\newtheorem{exmpl}[theoremCnt]{Example}
+\theoremstyle{definition}
+\newtheorem{remrk}[theoremCnt]{Remark}
+\theoremstyle{definition}
+\newtheorem{claim}[theoremCnt]{Утверждение}
+\theoremstyle{definition}
+\newtheorem{algorithm}[theoremCnt]{Algorithm}
+\theoremstyle{definition}
+\newtheorem{problem}[theoremCnt]{задача}
+\theoremstyle{definition}
+\newtheorem{exercise}[theoremCnt]{Упражнение}
+
+% non-numbered theorems
+\theoremstyle{definition}
+\newtheorem*{df*}{Определение}
+\theoremstyle{definition}
+\newtheorem*{notatn*}{Обозначение}
+\theoremstyle{plain}
+\newtheorem*{thm*}{Теорема}
+\theoremstyle{plain}
+\newtheorem*{lm*}{Лемма}
+\theoremstyle{plain}
+\newtheorem*{crly*}{Corollary}
+\theoremstyle{plain}
+\newtheorem*{prop*}{Предложение}
+\theoremstyle{definition}
+\newtheorem*{exmpl*}{Пример}
+\theoremstyle{definition}
+\newtheorem*{remrk*}{Remark}
+\theoremstyle{definition}
+\newtheorem*{claim*}{Утверждение}
+\theoremstyle{definition}
+\newtheorem*{algorithm*}{Algorithm}
+\theoremstyle{definition}
+\newtheorem*{problem*}{Task}
+\theoremstyle{definition}
+\newtheorem*{exercise*}{Упражнение}
+
+% small caps "proof" label
+\addto\captionsrussian{\renewcommand\proofname{\normalfont\textsc{Proof}}}
+
+% some aliases
+\newcommand{\R}{\ensuremath \mathbb{R}}
+\newcommand{\Q}{\ensuremath \mathbb{Q}}
+\newcommand{\CC}{\ensuremath \mathbb{C}}
+\newcommand{\Z}{\ensuremath \mathbb{Z}}
+\newcommand{\N}{\ensuremath \mathbb{N}}
+\newcommand{\eps}{\ensuremath \varepsilon}
+\newcommand{\then}{\ensuremath \implies}
+\newcommand{\Mid}{\ensuremath \;\middle|\;}
+\newcommand{\Ot}{\widetilde{O}}
+
+% project-local aliases
+\newcommand{\A}{\ensuremath \mathfrak{A}}
+\newcommand{\B}{\ensuremath \mathcal{B}}
+\newcommand{\p}{\ensuremath \mathcal{P}}
+\newcommand{\mua}{\ensuremath \mu^\ast}
+\newcommand{\LL}{\ensuremath \mathcal{L}}
+\newcommand{\lan}{\ensuremath \lambda_n}
+\newcommand{\alan}{\ensuremath \A_{\lan}}
+
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\Real}{Re}
+\DeclareMathOperator{\Imaginary}{Im}
+\DeclareMathOperator*{\esssup}{ess\,sup}
+\DeclareMathOperator{\Ker}{Ker}
+\DeclareMathOperator{\diam}{diam}
+
+\begin{document}
+\tableofcontents
+\newpage
+
+\import{sections/}{01.tex}
+\end{document}
+
