@@ -1,0 +1,45 @@
+%16.02.2024, лекция 2
+
+\section{Lecture 2}
+
+Обещали скинуть материал где все подробно записано, конспект идиотский получился
+
+On today's lecture will be given some algorithms and we will try to reverse engineering what they do.
+
+Estimate amount of different elements in a stream.
+
+Now we are given a $t$ value and want to check whether count of different values in a stream is around $t$.
+
+Le'ts $d$ be a estimate from our previous algorithm, then
+
+\begin{align*}
+	\text{if } d < \frac t 3 \implies \Pr[\exists i \colon f_i > 0 \land i \in S] < \frac 1 2 \\
+	\text{if } d > 3 t \implies \Pr[\exists i \colon f_i > 0 \land i \in S] < \frac 1 2 \\
+\end{align*}
+
+
+\begin{algorithm}
+	Let $h \colon [n] \to [n]$ be a $2$-universal hash function.
+	
+	Put $t \gets 0$ and $B \gets \varnothing$.
+	
+	Now, let $j$ be an element of a stream, then if $z(h(j)) \geq t$ then $B \gets B \cup \{j\}$ and while $|B| \geq \frac {c} {\eps^2}$ do $t \gets t + 1$ and $B \gets B \setminus \{j \colon z(h(j)) < t\}$, where $c$ is a some constant define later.
+	
+	At the end return $|B| \cdot 2^t$.
+	
+	Idea about this algorithm is that $E$ TODO
+	
+	It implies that space complexity is $O(\frac 1 {\varepsilon^2} \log n + \log n)$.
+	
+	To reduce a space complexity we would have another 2-universal hash function $g \colon [n] \to [b \cdot \eps^{-4} \cdot \log^2 n]$, where $b$ is once again some hash function.
+	
+	Now set $B$ would be a set of pairs.
+	
+	Let $j$ be an element of a stream, then if $z(h(j)) \geq t$ then $B \gets B \cup \{(g(j), z(h(j)))\}$ and while $|B| \geq \frac {c} {\eps^2}$ do $t \gets t + 1$ and $B \gets B \setminus \{(a, b) \colon b < t\}$.
+	
+	Now space complexity is $O(\frac 1 {\eps^2} (\log(\frac 1 \eps) + \log \log n) + \log n)$
+	
+	To analyze it's approximation factor we would say that $x_{r, j} = 1 \iff z(h(j)) \geq r$ and 
+\end{algorithm}
+
+Под конец смотрели Unit 6 из книжки.

@@ -1,0 +1,172 @@
+%08.03.2024
+\section{Lecture 5}
+
+continuation of unit 11
+
+\subsection{Lower bounds for streaming algorithms}
+
+We will start with basics on communication complexity.
+
+\begin{df}[Communication Protocol?]
+	Two players Alice and Bob. Alice knows string $x \in \{0, 1\}^n$ and Bob knows string $y \in \{0, 1\}^m$. And they can send one bit to each other. 
+	
+	The function $f \colon \{0, 1\}^n \times \{0, 1\}^m \to \{0, 1\}$ is given. They want to compute $f(x, y)$. Bob should know answer at the end of communication.
+	
+	They can send messages to each other. 
+	We would take care of count of bits they sent and also count of rounds. By round we mean that first Alice sends some block of bits, after that Bob send something to Alice and so on.
+\end{df}
+
+We will get lower bounds on streaming algorithms through communication complexity.
+
+\begin{remrk}
+	Idea: Alice has $x$, Bob has $y$.
+	In their mind they construct a stream with first half filled with $x$ and second part filled with $y$. After that they say: suppose there is an efficient algorithm for that stream. Then Alice will run this algorithm on first half of a stream(because Alice know $x$) and send memory of this algorithm to Bob. After that Bob just continue this algorithm on $y$.
+	
+	In our model it's a single round communication. If we can get lower bounds for $k$-rounds protocol it would give us a lower bound on $2k - 1$ passes communication.
+	Alice computes something on $x$, sends to Bob, Bob computes on $y$, sends to Alice and so on.
+\end{remrk}
+
+\begin{claim}
+	Using this idea with communication complexity we cannot show better lower bound than $\frac m p$ for $p$-passes algorithm. 
+\end{claim}
+\begin{proof}
+	Suppose for some problem we proved better lower bound than $\frac m p$. 
+	
+	But we know that every communication protocol need no more than $n$ bits(because Alice can send just $x$ to Bob).
+	TODOTODOTODO
+\end{proof}
+
+\begin{prop}
+	We use notation $\cc(f)$ is a communication complexity of function $f$. 
+\end{prop}
+
+\begin{remrk}
+	If we have rectangle $R = X \times Y$, where $X \subseteq \{0, 1\}^n$ and $Y \subseteq \{0, 1\}^m$, then if $R$ is a leaf(end of communication) then $R$ is monochromatic. Means that $\exists c \colon \forall (x, y) \in R \implies f(x, y) = c$.
+\end{remrk}
+
+\begin{remrk}
+	Communication tree is a binary tree such that every node labeled with player who sends(Alice or Bob) and also if we look at rectangles of nodes. Then node splits rectangle either vertical or horizontal(based of player which sends message now).
+	
+	Can be proved easily by induction from the very bottom.
+\end{remrk}
+
+
+\begin{remrk}
+To say that some function requires a lot of bits to be sent, we would should that in every communication tree count of leaves is huge. 
+Easy to see that $L(f) \leq 2^{\cc(f)}$ where $L(f)$ denotes minimum amount of leaves in any communication tree for $f$. 
+	
+\end{remrk}
+
+\begin{thm}[Equality problem]
+	Given $n = m, \; \text{Eq}(x, y) = [x = y]$. We want to prove that $\cc(\text{Eq}) \geq n$.
+\end{thm}
+
+\begin{proof}
+	It's easy to see that every monochromatic rectangle $(x, x)$ is of size 1 and two of them cannot be in the same bigger monochromatic rectangle. 
+	Implies that $L(\text{Eq}) \geq 2^n \implies \cc(\text{Eq}) \geq n$.	
+\end{proof}
+
+\begin{thm}[Disjoint problem]
+	Assume function:
+	\begin{align*}
+		\text{DISJ}(x, y) = \begin{cases}
+			1, & \sum\limits_i x_i y_i = 0 \\
+			0 & \text{otherwise}
+		\end{cases}
+	\end{align*}
+	
+	Then $\cc(\text{DISJ}) \geq n$.
+\end{thm}
+
+\begin{proof}
+	Every monochromatic rectangle $(x, \overline x)$. Then, for every pair $(x, \overline x)$ and $(y, \overline y)$, then either $\text{DISJ}(x, \overline y) = 1$, either $\text{DISJ}(y, \overline x) = 1$, implies that $L(\text{DISJ}) \geq n$.
+\end{proof}
+
+\begin{thm}[Index problem]
+	Assume function $\text{Index}(x, y) = x_y$, where $x \in \{0, 1\}^{2^n}$ and $y \in [2^n]$.
+	
+	In one round model we have $\cc(\text{Index}) \geq 2^n$.
+\end{thm}
+
+\begin{proof}
+	Otherwise some inputs will result same message implies that Bob can just set $y$ as a position of different bit in those Alice strings.
+\end{proof}
+
+\begin{lm}[Yao principal]
+	\begin{align*}
+		\max_\mu \cc_{\mu, \eps}(f) = R_\eps(f)
+	\end{align*}, where $R_\eps$ is a randomized complexity with a probability of error at most $\eps$. Alice and Bob gets same random string $r$ and they output $f(x, y)$ with probability of success at least $1 - \eps$.
+	
+	And $\mu$ is some distribution over inputs and we need to solve a problem deterministically assuming that inputs are distributed with $\mu$.
+\end{lm}
+
+\begin{proof}
+	Let's define a game. Player I choose a deterministic algorithm and player II choose an input. Player I wins if algorithm outputs correct output, II wins otherwise.
+	
+	There exists $\sigma$ ~-- distribution over protocols of depth $\leq R_\eps(f)$ such that for every input $(x, y)$ probability 
+	\begin{align*}
+		\Pr_{P \sim \sigma} [P(x, y) = f(x, y)] \geq 1 - \varepsilon
+	\end{align*}, where $P$ is a protocol for $f$.
+	It's correct because we can look on randomized protocol from $R_\eps(f)$, then distribution over random bits $r$ of that protocol gives us correct distribution $\sigma$. So there is a bijection between distribution on protocols and randomized protocol.
+	
+ 	Now using Nash Theorem we get that there exists a mixed strategy with Nash equilibrium. 
+	Assume that all protocols have bounded depth $t$.
+	
+	\begin{align*}
+		\max_\sigma \min_\chi \Pr_{\substack{P \sim \sigma \\ (x, y) \sim \chi}}[P(x, y) = f(x, y)] &= \min_\chi \max_\sigma \Pr_{\substack{P \sim \sigma \\ (x, y) \sim \chi}}[P(x, y) = f(x, y)] \\
+		\max_\sigma \min_{(x, y)} \Pr_{P \sim \sigma}[P(x, y) = f(x, y)] &= \min_\chi \max_{P} \Pr_{(x, y) \sim \chi}[P(x, y) = f(x, y)]
+	\end{align*}
+	Second line is correct because Nash theorem says that second strategy may be pure.
+	
+	And say that this $\max \min$ equals to $1 - \eps_t$.
+	
+	Then $R_\eps(f) = \min \{t \mid \eps_t \leq \eps \}$, using left part of last equality.
+	
+	And we can see that $\max_\mu \cc_{\mu, \eps}(f) = \min \{t \mid \eps_t \leq \eps\}$ using right part of equality.
+	
+	Which finished our proof.
+\end{proof}
+
+Typically we would use this theorem in form that $R_\eps(f) \geq \max_\mu \cc_{\mu, \eps}(f)$.
+
+\begin{thm}[Randomized Index problem]
+	Same as index problem that sometimes we can output wrong bit.
+	
+	$A \sim_U \{0, 1\}^{2^n}$ and $B \sim_U [2^n]$.
+	
+	Then, $\cc_{U, \eps} \geq 2^{\alpha n}$ implies $R_\eps \geq 2^{\alpha}$ for some $\alpha > 0$.
+\end{thm}
+
+\begin{proof}
+	Suppose for some protocol $P$ satisfies
+	\begin{align*}
+		\Pr_{(x, y)}[P(x, y) \neq x_y] \leq \frac 1 {20}
+	\end{align*}
+	
+	Then
+	\begin{align*}
+		\E_x[\Pr_y[P(x, y) \neq x_y]] &\leq \frac 1 {20} \implies \\
+		\Pr_x\left[\Pr_y[P(x, y) \neq x_y] \geq \frac 2 {20}\right] &\leq \frac 1 2
+	\end{align*}
+	
+	Implies that there is a set $S$ such that $|S| \geq \dfrac {2^n} 2$ such that
+	\begin{align*}
+		\forall x \in S \implies \Pr_y[P(x, y) \neq x_y] \leq \frac 1 {10}
+	\end{align*}
+	
+	The idea is take those inputs from $S$ and look only on them.
+	Our output should be correct almost all times, so Bob should identify what Alice has sent to him.
+	
+	From now on $x \in S$, so Bob has some function $g(m(x), y) = P(x, y)$, where $m(x)$ is a message that Alice send to Bob on input $x$.
+	Let $w(m) = [g(m, 1), g(m, 2), \dots, g(m, 2^n)]$, then distance $H(x, w(m(x))) \leq 2^n \cdot \dfrac 1 {10} = \dfrac {2^n} {10}$.
+	
+	Let $x_1, x_2 \in S$ such that $m(x_1) = m(x_2)$ and let $w(m(x_1)) = w(m(x_2) ) = y$, then using triangle inequality we have that $H(x_1, x_2) \leq H(x_1, y) + H(x_2, y) \leq \dfrac 1 5 2^n$.
+	
+	The well known fact that there exists such $S_2 \subseteq S \colon \forall x_1, x_2 \in S_2 \implies H(x_1, x_2) \geq \dfrac {2^n} 5$ and $|S_2| \geq 2^{\alpha n}$ for some $\alpha > 0$, then message for any two elements of $S_2$ should be different.
+	
+	To construct such $S_2$ we take random subset of $\{0, 1\}^n$ of proper size, says that with high probability it's satisfies our conditions and with high probability a lot of elements from $S$ are in $S_2$.
+	
+	Implies that $\cc_{U, \eps} (f) \geq 2^{\alpha n}$, implies that $R_\eps \geq 2^\alpha$.
+\end{proof}
+
+
