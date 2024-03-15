@@ -129,12 +129,12 @@ Easy to see that $L(f) \leq 2^{\cc(f)}$ where $L(f)$ denotes minimum amount of l
 
 Typically we would use this theorem in form that $R_\eps(f) \geq \max_\mu \cc_{\mu, \eps}(f)$.
 
-\begin{thm}[Randomized Index problem]
+\begin{thm}[INX - Randomized Index problem] \label{problem:INX}
 	Same as index problem that sometimes we can output wrong bit.
 	
 	$A \sim_U \{0, 1\}^{2^n}$ and $B \sim_U [2^n]$.
 	
-	Then, $\cc_{U, \eps} \geq 2^{\alpha n}$ implies $R_\eps \geq 2^{\alpha}$ for some $\alpha > 0$.
+	Then, $\cc_{U, \eps} \geq 2^{\alpha n}$ implies $R_\eps \geq 2^{\alpha n}$ for some $\alpha > 0$.
 \end{thm}
 
 \begin{proof}
@@ -145,8 +145,8 @@ Typically we would use this theorem in form that $R_\eps(f) \geq \max_\mu \cc_{\
 	
 	Then
 	\begin{align*}
-		\E_x[\Pr_y[P(x, y) \neq x_y]] &\leq \frac 1 {20} \implies \\
-		\Pr_x\left[\Pr_y[P(x, y) \neq x_y] \geq \frac 2 {20}\right] &\leq \frac 1 2
+		\E_x[\Pr_y[P(x, y) \neq x_y]] \leq \frac 1 {20} &\implies \\
+&\Pr_x\left[\Pr_y[P(x, y) \neq x_y] \geq \frac 2 {20}\right] \leq \frac 1 2
 	\end{align*}
 	
 	Implies that there is a set $S$ such that $|S| \geq \dfrac {2^n} 2$ such that
@@ -166,7 +166,7 @@ Typically we would use this theorem in form that $R_\eps(f) \geq \max_\mu \cc_{\
 	
 	To construct such $S_2$ we take random subset of $\{0, 1\}^n$ of proper size, says that with high probability it's satisfies our conditions and with high probability a lot of elements from $S$ are in $S_2$.
 	
-	Implies that $\cc_{U, \eps} (f) \geq 2^{\alpha n}$, implies that $R_\eps \geq 2^\alpha$.
+	Implies that $\cc_{U, \eps} (f) \geq 2^{\alpha n}$, implies that $R_\eps \geq 2^{\alpha n}$.
 \end{proof}
 
 

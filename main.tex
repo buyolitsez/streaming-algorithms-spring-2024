@@ -29,12 +29,28 @@
 \usepackage{import}
 \usepackage{xifthen}
 \usepackage{pdfpages}
+\usepackage{graphicx}
+\usepackage{float}
 \pgfplotsset{compat=1.16}
 
 \newcommand{\incfig}[2][1]{%
  \def\svgwidth{#1\columnwidth}
  \import{./figures/}{#2.pdf_tex}
 }
+
+\makeatletter
+\newenvironment{sqcases}{%
+	\matrix@check\sqcases\env@sqcases
+}{%
+	\endarray\right.%
+}
+\def\env@sqcases{%
+	\let\@ifnextchar\new@ifnextchar
+	\left\lbrack
+	\def\arraystretch{1.2}%
+	\array{@{}l@{\quad}l@{}}%
+}
+\makeatother
 
 \pdfsuppresswarningpagegroup=1
 
@@ -63,7 +79,7 @@
 \theoremstyle{definition}
 \newtheorem{algorithm}[theoremCnt]{Algorithm}
 \theoremstyle{definition}
-\newtheorem{problem}[theoremCnt]{задача}
+\newtheorem{problem}[theoremCnt]{Task}
 \theoremstyle{definition}
 \newtheorem{exercise}[theoremCnt]{Упражнение}
 
@@ -134,6 +150,7 @@
 \import{sections/}{03.tex}
 \import{sections/}{04.tex}
 \import{sections/}{05.tex}
+\import{sections/}{06.tex}
 
 \end{document}
 
