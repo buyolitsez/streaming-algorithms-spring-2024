@@ -22,19 +22,26 @@ We will get lower bounds on streaming algorithms through communication complexit
 	Idea: Alice has $x$, Bob has $y$.
 	In their mind they construct a stream with first half filled with $x$ and second part filled with $y$. After that they say: suppose there is an efficient algorithm for that stream. Then Alice will run this algorithm on first half of a stream(because Alice know $x$) and send memory of this algorithm to Bob. After that Bob just continue this algorithm on $y$.
 	
-	In our model it's a single round communication. If we can get lower bounds for $k$-rounds protocol it would give us a lower bound on $2k - 1$ passes communication.
-	Alice computes something on $x$, sends to Bob, Bob computes on $y$, sends to Alice and so on.
+	In our model it's a single round communication. If we can get lower bounds for $2k-1$-rounds protocol it would give us a lower bound on $2k$ passes streaming algorithm.
+	Alice computes something on $x$, sends to Bob, Bob computes on $y$, sends to Alice and so on. See Fig. \ref{fig:streaming_to_communication}.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.4\linewidth]{figures/streaming_to_communication.jpeg}
+\caption{From 5-rounds protocol to 3-passes streaming.}
+\label{fig:streaming_to_communication}
+\end{figure}
 \end{remrk}
 
 \begin{claim}
-	Using this idea with communication complexity we cannot show better lower bound than $\frac m p$ for $p$-passes algorithm. 
-\end{claim}
-\begin{proof}
-	Suppose for some problem we proved better lower bound than $\frac m p$. 
+	If $C$ is a communication complexity for $2p - 1$ round protocol and $S$ is a space lower bound for $p$-passes streaming algorithm. Hence, using idea above we show that
+	\begin{align*}
+		C \leq (2p - 1) S \implies S \geq \frac C {2p - 1}
+	\end{align*}
 	
-	But we know that every communication protocol need no more than $n$ bits(because Alice can send just $x$ to Bob).
-	TODOTODOTODO
-\end{proof}
+	And using this idea we cannot show a better lower bound.
+\end{claim}
 
 \begin{prop}
 	We use notation $\cc(f)$ is a communication complexity of function $f$. 
@@ -83,13 +90,13 @@ Easy to see that $L(f) \leq 2^{\cc(f)}$ where $L(f)$ denotes minimum amount of l
 \end{proof}
 
 \begin{thm}[Index problem]
-	Assume function $\text{Index}(x, y) = x_y$, where $x \in \{0, 1\}^{2^n}$ and $y \in [2^n]$.
+	Assume function $\text{Index}(x, y) = x[y]$, where $x \in \{0, 1\}^{2^n}$ and $y \in [2^n]$.
 	
 	In one round model we have $\cc(\text{Index}) \geq 2^n$.
 \end{thm}
 
 \begin{proof}
-	Otherwise some inputs will result same message implies that Bob can just set $y$ as a position of different bit in those Alice strings.
+	Otherwise some inputs for Alice would send same message. Implies that Bob can just set $y$ as a position of different bit in those Alice strings.
 \end{proof}
 
 \begin{lm}[Yao principal]
@@ -97,57 +104,58 @@ Easy to see that $L(f) \leq 2^{\cc(f)}$ where $L(f)$ denotes minimum amount of l
 		\max_\mu \cc_{\mu, \eps}(f) = R_\eps(f)
 	\end{align*}, where $R_\eps$ is a randomized complexity with a probability of error at most $\eps$. Alice and Bob gets same random string $r$ and they output $f(x, y)$ with probability of success at least $1 - \eps$.
 	
-	And $\mu$ is some distribution over inputs and we need to solve a problem deterministically assuming that inputs are distributed with $\mu$.
+	And $\mu$ in $CC_{\mu, \eps}(f)$ is some distribution over inputs($(x, y) \sim \mu$) and we need to solve a problem deterministically assuming that inputs are distributed with $\mu$.
 \end{lm}
 
 \begin{proof}
 	Let's define a game. Player I choose a deterministic algorithm and player II choose an input. Player I wins if algorithm outputs correct output, II wins otherwise.
 	
-	There exists $\sigma$ ~-- distribution over protocols of depth $\leq R_\eps(f)$ such that for every input $(x, y)$ probability 
+	Let's take a look on randomized protocol from $R_\eps(f)$, distribution over random bits $r$ of that protocol gives us correct distribution $\sigma$ over deterministic protocols. So there is a bijection between distribution on protocols and randomized protocol. Hence, there exists $\sigma$ ~-- distribution over protocols of depth $\leq R_\eps(f)$ such that for every input $(x, y)$ probability 
 	\begin{align*}
 		\Pr_{P \sim \sigma} [P(x, y) = f(x, y)] \geq 1 - \varepsilon
-	\end{align*}, where $P$ is a protocol for $f$.
-	It's correct because we can look on randomized protocol from $R_\eps(f)$, then distribution over random bits $r$ of that protocol gives us correct distribution $\sigma$. So there is a bijection between distribution on protocols and randomized protocol.
+	\end{align*}, where $P$ is a deterministic protocol for $f$ of depth $\leq R_\eps(f)$.
 	
- 	Now using Nash Theorem we get that there exists a mixed strategy with Nash equilibrium. 
+	
+ 	Now using Nash Theorem we get that there exists a mixed strategy with Nash equilibrium. Moreover, it says that $\max_I \min_{II} = \min_{II} \max_I$ and that we can use mixed strategy for first player and pure for second(and vice versa).
 	Assume that all protocols have bounded depth $t$.
 	
 	\begin{align*}
 		\max_\sigma \min_\chi \Pr_{\substack{P \sim \sigma \\ (x, y) \sim \chi}}[P(x, y) = f(x, y)] &= \min_\chi \max_\sigma \Pr_{\substack{P \sim \sigma \\ (x, y) \sim \chi}}[P(x, y) = f(x, y)] \\
 		\max_\sigma \min_{(x, y)} \Pr_{P \sim \sigma}[P(x, y) = f(x, y)] &= \min_\chi \max_{P} \Pr_{(x, y) \sim \chi}[P(x, y) = f(x, y)]
 	\end{align*}
-	Second line is correct because Nash theorem says that second strategy may be pure.
 	
-	And say that this $\max \min$ equals to $1 - \eps_t$.
+	Assume that this $\max \min$ equals to $1 - \eps_t$.
 	
 	Then $R_\eps(f) = \min \{t \mid \eps_t \leq \eps \}$, using left part of last equality.
 	
-	And we can see that $\max_\mu \cc_{\mu, \eps}(f) = \min \{t \mid \eps_t \leq \eps\}$ using right part of equality.
+	And we can see that $\max_\mu \cc_{\mu, \eps}(f) = \min \{t \mid \eps_t \leq \eps\}$ using right part of last equality.
 	
 	Which finished our proof.
 \end{proof}
 
 Typically we would use this theorem in form that $R_\eps(f) \geq \max_\mu \cc_{\mu, \eps}(f)$.
 
-\begin{thm}[INX - Randomized Index problem] \label{problem:INX}
-	Same as index problem that sometimes we can output wrong bit.
-	
-	$A \sim_U \{0, 1\}^{2^n}$ and $B \sim_U [2^n]$.
-	
-	Then, $\cc_{U, \eps} \geq 2^{\alpha n}$ implies $R_\eps \geq 2^{\alpha n}$ for some $\alpha > 0$.
+\begin{df}[INX - Randomized Index problem] \label{problem:INX}
+	Let $\eps$ be a probability of error. $f(x, y) = x[y]$, where $x \in \{0, 1\}^{2^n}, y \in 2^n$.
+	Complexity of this problem is $R_\eps(f)$.
+\end{df}
+
+\begin{thm}
+	Let $x \sim_U \{0, 1\}^{2^n}$ and $y \sim_U [2^n]$(i.e. $\chi$ is a uniform distribution).	
+	Then,~$\cc_{U, \eps} \geq 2^{\alpha n}$ for one round protocol.
 \end{thm}
 
 \begin{proof}
 	Suppose for some protocol $P$ satisfies
 	\begin{align*}
-		\Pr_{(x, y)}[P(x, y) \neq x_y] \leq \frac 1 {20}
+		\Pr_{(x, y)\sim U}[P(x, y) \neq x_y] \leq \frac 1 {20}
 	\end{align*}
 	
 	Then
 	\begin{align*}
 		\E_x[\Pr_y[P(x, y) \neq x_y]] \leq \frac 1 {20} &\implies \\
 &\Pr_x\left[\Pr_y[P(x, y) \neq x_y] \geq \frac 2 {20}\right] \leq \frac 1 2
-	\end{align*}
+	\end{align*} By Markov's inequality.
 	
 	Implies that there is a set $S$ such that $|S| \geq \dfrac {2^n} 2$ such that
 	\begin{align*}
@@ -158,15 +166,22 @@ Typically we would use this theorem in form that $R_\eps(f) \geq \max_\mu \cc_{\
 	Our output should be correct almost all times, so Bob should identify what Alice has sent to him.
 	
 	From now on $x \in S$, so Bob has some function $g(m(x), y) = P(x, y)$, where $m(x)$ is a message that Alice send to Bob on input $x$.
-	Let $w(m) = [g(m, 1), g(m, 2), \dots, g(m, 2^n)]$, then distance $H(x, w(m(x))) \leq 2^n \cdot \dfrac 1 {10} = \dfrac {2^n} {10}$.
+	Let $w(m) = [g(m, 1), g(m, 2), \dots, g(m, 2^n)]$, then avarage distance $\E H(x, w(m(x))) \leq 2^n \cdot \dfrac 1 {10} = \dfrac {2^n} {10}$.
 	
 	Let $x_1, x_2 \in S$ such that $m(x_1) = m(x_2)$ and let $w(m(x_1)) = w(m(x_2) ) = y$, then using triangle inequality we have that $H(x_1, x_2) \leq H(x_1, y) + H(x_2, y) \leq \dfrac 1 5 2^n$.
 	
-	The well known fact that there exists such $S_2 \subseteq S \colon \forall x_1, x_2 \in S_2 \implies H(x_1, x_2) \geq \dfrac {2^n} 5$ and $|S_2| \geq 2^{\alpha n}$ for some $\alpha > 0$, then message for any two elements of $S_2$ should be different.
+	The well known fact that there exists such $S_2 \subseteq S \colon \forall x_1, x_2 \in S_2 \implies H(x_1, x_2) > \dfrac {2^n} 5$ and $|S_2| \geq 2^{\alpha n}$ for some $\alpha > 0$, then message for any two elements of $S_2$ should be different.
 	
 	To construct such $S_2$ we take random subset of $\{0, 1\}^n$ of proper size, says that with high probability it's satisfies our conditions and with high probability a lot of elements from $S$ are in $S_2$.
 	
-	Implies that $\cc_{U, \eps} (f) \geq 2^{\alpha n}$, implies that $R_\eps \geq 2^{\alpha n}$.
+	Implies that $\cc_{U, \eps} (f) \geq 2^{\alpha n}$.
+\end{proof}
+
+\begin{crly}
+	$R_\eps \geq 2^{\alpha n}$ for INX \ref{problem:INX} problem in terms of one round protocols.
+\end{crly}
+\begin{proof}
+		We know that $\cc_{U, \eps} \geq 2^{\alpha n}$, it's implies that $\max_\mu CC_{\mu, \eps} \geq 2^{\alpha n}$, hence $R_\eps \geq 2^{\alpha n}$ for some $\alpha > 0$.
 \end{proof}
 
 
