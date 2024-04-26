@@ -141,8 +141,8 @@ Typically we would use this theorem in form that $R_\eps(f) \geq \max_\mu \cc_{\
 \end{df}
 
 \begin{thm}
-	Let $x \sim_U \{0, 1\}^{2^n}$ and $y \sim_U [2^n]$(i.e. $\chi$ is a uniform distribution).	
-	Then,~$\cc_{U, \eps} \geq 2^{\alpha n}$ for one round protocol.
+	Let $x \sim_U \{0, 1\}^{n}$ and $y \sim_U [n]$(i.e. $\chi$ is a uniform distribution).	
+	Then,~$\cc_{U, \eps} \geq \alpha n$ for one round protocol, where $\alpha > 0$.
 \end{thm}
 
 \begin{proof}
@@ -166,7 +166,7 @@ Typically we would use this theorem in form that $R_\eps(f) \geq \max_\mu \cc_{\
 	Our output should be correct almost all times, so Bob should identify what Alice has sent to him.
 	
 	From now on $x \in S$, so Bob has some function $g(m(x), y) = P(x, y)$, where $m(x)$ is a message that Alice send to Bob on input $x$.
-	Let $w(m) = [g(m, 1), g(m, 2), \dots, g(m, 2^n)]$, then avarage distance $\E H(x, w(m(x))) \leq 2^n \cdot \dfrac 1 {10} = \dfrac {2^n} {10}$.
+	Let $w(m) = [g(m, 1), g(m, 2), \dots, g(m, 2^n)]$, then distance $H(x, w(m(x))) \leq 2^n \cdot \dfrac 1 {10} = \dfrac {2^n} {10}$.
 	
 	Let $x_1, x_2 \in S$ such that $m(x_1) = m(x_2)$ and let $w(m(x_1)) = w(m(x_2) ) = y$, then using triangle inequality we have that $H(x_1, x_2) \leq H(x_1, y) + H(x_2, y) \leq \dfrac 1 5 2^n$.
 	
@@ -174,14 +174,16 @@ Typically we would use this theorem in form that $R_\eps(f) \geq \max_\mu \cc_{\
 	
 	To construct such $S_2$ we take random subset of $\{0, 1\}^n$ of proper size, says that with high probability it's satisfies our conditions and with high probability a lot of elements from $S$ are in $S_2$.
 	
-	Implies that $\cc_{U, \eps} (f) \geq 2^{\alpha n}$.
+	Hence, for every two different elements of $S_2$, their message will be different. So we need to encode at least $|S_2|$ messages, so at least $\log |S_2|$ bites need to be sent.
+	
+	Implies that $\cc_{U, \eps} (f) \geq \alpha n$.
 \end{proof}
 
 \begin{crly}
-	$R_\eps \geq 2^{\alpha n}$ for INX \ref{problem:INX} problem in terms of one round protocols.
+	$R_\eps \geq \alpha n$ for INX \ref{problem:INX} problem in terms of one round protocols.
 \end{crly}
 \begin{proof}
-		We know that $\cc_{U, \eps} \geq 2^{\alpha n}$, it's implies that $\max_\mu CC_{\mu, \eps} \geq 2^{\alpha n}$, hence $R_\eps \geq 2^{\alpha n}$ for some $\alpha > 0$.
+		We know that $\cc_{U, \eps} \geq \alpha n$, it's implies that $\max_\mu CC_{\mu, \eps} \geq \alpha n$, hence $R_\eps \geq \alpha n$ for some $\alpha > 0$.
 \end{proof}
 
 
